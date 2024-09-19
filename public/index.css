@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  #form-container {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 3vh;
+  }
+  
+  #suggestion-input {
+    width: 300px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    margin-right: 8px;
+  }
+  
+  #submit-button {
+    margin: 0;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #suggestions-container {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .suggestion-box {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 18px;
+    max-width: 300px; /* Ensure boxes don't get too wide */
+    word-wrap: break-word;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .suggestion-box:hover {
+    transform: scale(1.05);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .close-button {
+    position: relative;
+    right: -5px;
+    margin-left: 2px;
+    color: red;
+    cursor: pointer;
+    font-size: 18px;
+    display: none; /* Hidden by default */
+  }
+  p{
+    margin: 0;
+    padding: 0;
+  }
+  .suggestion-box:hover .close-button {
+    display: flex; /* Show on hover */
+  }
+  
