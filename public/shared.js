@@ -38,6 +38,7 @@ const getPositionForSuggestion = (suggestion, width, height, container) => {
 };
 
 ws.onmessage = (event) => {
+  if(!isPresenter)  return;
   const suggestions = JSON.parse(event.data);
     const container = document.getElementById('suggestions-container');
     container.innerHTML = ''; // Clear previous suggestions
@@ -56,9 +57,7 @@ ws.onmessage = (event) => {
         ws.send(JSON.stringify({ type: 'delete', index }));
       });
       suggestionBox.appendChild(text);
-      if (isPresenter) {
-        suggestionBox.appendChild(closeButton);
-      }
+      suggestionBox.appendChild(closeButton);
 
       // Calculate position without overlapping
       const boxWidth = Math.min(suggestionBox.scrollWidth + 40, 300); // Adjust for padding
@@ -71,6 +70,7 @@ ws.onmessage = (event) => {
     });
 };
 
+if(!isPresenter){
   document.getElementById('submit-button').addEventListener('click', () => {
     const input = document.getElementById('suggestion-input');
     if (input.value.trim() !== '') {
@@ -78,3 +78,4 @@ ws.onmessage = (event) => {
       input.value = ''; // Clear input field
     }
   });
+}
