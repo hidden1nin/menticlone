@@ -7,8 +7,39 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
+  <div class="options">
+    <div id="count" class="option">0</div>
+    <div id="code-display" class="option">. . .</div>
+    <div id="settings" class="option">+</div>
+    <div id="expand" class="option">&#x26F6;</div>
+  </div>
+  
   <div id="presenter"></div>
   <div id="suggestions-container"></div>
+
+  <!-- Modal HTML -->
+  <div id="modal" class="modal">
+    <div class="modal-content" id="modal-content">
+      <p id="modal-text"></p>
+    </div>
+  </div>
+
+  <!-- Settings modal, input for question, buttons and inputs to add answers to vote on.-->
+
   <script src="shared.js"></script>
+  <script>
+    // Fullscreen toggle function
+    const expandButton = document.getElementById('expand');
+    
+    expandButton.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log(`Error attempting to enable fullscreen mode: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    });
+  </script>
 </body>
 </html>

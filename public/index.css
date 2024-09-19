@@ -8,6 +8,27 @@ body {
     align-items: center;
     height: 100vh;
   }
+  .options {
+    z-index: 1000;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .option {
+    background-color: white;
+    padding: 8px;
+    padding-bottom: 4px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    overflow: auto;
+    font-size: 18px;
+    font-weight: 800;
+  }
   
   #form-container {
     position: absolute;
@@ -21,16 +42,17 @@ body {
   }
   
   #suggestion-input {
-    width: 300px;
+    width: 280px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
-    margin-right: 8px;
+    margin-bottom: 12px;
   }
   
   #submit-button {
     margin: 0;
+    width: 300px;
     padding: 10px 20px;
     border-radius: 5px;
     border: none;
@@ -51,20 +73,33 @@ body {
     position: relative;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
   }
-  
+
+  /* Define the fade-in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      background-color: white;
+    }
+    to {
+      background-color: #007bff;
+      opacity: 1;
+    }
+  }
   .suggestion-box {
+    color: white;
     display: flex;
     flex-direction: row;
     position: absolute;
     padding: 10px;
     background-color: white;
-    border-radius: 25px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    /* border: 1px solid #ccc; */
     font-size: 18px;
     max-width: 300px; /* Ensure boxes don't get too wide */
     word-wrap: break-word;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    opacity: 0; /* Start with opacity 0 */
   }
   
   .suggestion-box:hover {
@@ -78,7 +113,8 @@ body {
     margin-left: 2px;
     color: red;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
+    padding: none;
     display: none; /* Hidden by default */
   }
   p{
@@ -89,3 +125,96 @@ body {
     display: flex; /* Show on hover */
   }
   
+
+  /* Login page */
+
+#form-container {
+  position: relative;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20vh;
+}
+#topic {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+#error-message {
+  color: red;
+  display: none; /* Hidden by default */
+  margin-top: 10px;
+}
+
+#class-input {
+  text-align: center;
+  width: 280px;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 12px; /* Space between input and buttons */
+}
+
+#join-button, #create-button {
+  width: 300px;
+  padding: 12px;
+  margin: 5px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#join-button:hover, #create-button:hover {
+  background-color: #0056b3;
+}
+
+/* Add this CSS to your existing stylesheet */
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black background with opacity */
+}
+
+.modal-content {
+  border-radius: 10px;
+  font-size: 36px;
+  color: white;
+  background-color: #007bff;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  width: 80%; /* Could be more or less, depending on screen size */
+  max-width: 600px; /* Limit the max width */
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-blur {
+  filter: blur(10px);
+}
+

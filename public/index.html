@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join or Create Class</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div id="form-container">
+    <input type="text" id="class-input" placeholder="Enter class code or name" />
+    <button id="join-button">Join Class</button>
+    <button id="create-button">Create Class</button>
+    <div id="error-message">Invalid input! Please enter a valid class code or name.</div>
+  </div>
+
+  <script>
+    function showError(message) {
+      const errorMessage = document.getElementById('error-message');
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block'; // Show the error message
+
+      // Hide the error message after 3 seconds
+      setTimeout(() => {
+        errorMessage.style.display = 'none';
+      }, 3000);
+    }
+
+    // Join class logic
+    document.getElementById('join-button').onclick = function() {
+      const classCode = document.getElementById('class-input').value.trim();
+
+      if (classCode === '') {
+        showError('Please enter a class code to join.');
+      } else {
+        // Redirect to user.html with the provided class code
+        window.location.href = `/user.html?code=${classCode}`;
+      }
+    };
+
+    // Function to generate a random string of specified length
+    function generateRandomString(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
+    // Create class logic
+    document.getElementById('create-button').onclick = function() {
+        const generatedCode = Math.random().toString(36).substr(2, 5); // e.g., "abc12"
+        const authCode = generateRandomString(128);
+        // Redirect to presenter.html with the generated code
+        window.location.href = `/presenter.html?auth=${authCode}&code=${generatedCode}`;
+    }
+  </script>
+</body>
+</html>
