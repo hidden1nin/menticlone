@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Comfortaa';
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -9,18 +9,21 @@ body {
     height: 100vh;
   }
   .options {
-    z-index: 1000;
+    z-index: 10000;
     position: absolute;
     top: 10px;
     right: 10px;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    transition: all 1s ease;
+    opacity: 1;
+    transition-behavior: allow-discrete;
   }
   .option {
+    align-content: center;
     background-color: white;
     padding: 8px;
-    padding-bottom: 4px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
@@ -42,6 +45,7 @@ body {
   }
   
   #suggestion-input {
+    font-family: 'Comfortaa';
     width: 280px;
     padding: 10px;
     border-radius: 5px;
@@ -51,6 +55,7 @@ body {
   }
   
   #submit-button {
+    font-family: 'Comfortaa';
     margin: 0;
     width: 300px;
     padding: 10px 20px;
@@ -141,6 +146,8 @@ body {
   font-size: 24px;
   font-weight: 500;
   margin-bottom: 32px;
+  width: 280px;
+  overflow-wrap: anywhere;
 }
 #error-message {
   color: red;
@@ -185,7 +192,6 @@ body {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.4); /* Black background with opacity */
 }
 
 .modal-content {
@@ -199,7 +205,94 @@ body {
   max-width: 600px; /* Limit the max width */
   box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
 }
+#settings-modal-content{
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+#topic-input {
+  font-family: 'Comfortaa';
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+.option-input {
+  font-family: 'Comfortaa';
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+#add-option-button, #clear-option-button{
+  margin: auto;
+  font-family: 'Comfortaa';
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 8px;
+  background-color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+#voting-modal{
+  margin: 0;
+  position: absolute;
+  display: none; /* Hidden by default */
+}
+#voting-modal-content{
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+}
+.vote_specific{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 5px;
+  margin-top: 8px;
+}
+.vote_specific p {
+  background-color: white;
+  color: black;
+  font-size: 34px;
+  padding: 8px;
+  border-radius: 5px;
+}
+#buttons{
+  display: flex;
+  flex-direction: column;
+}
+#buttons button{
+  font-family: 'Comfortaa';
+  margin: 0;
+  margin-top: 8px;
+  width: 300px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+#inputs{
+  display: contents;
+}
+#options-list{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .close-modal {
   color: #aaa;
   float: right;

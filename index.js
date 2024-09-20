@@ -15,12 +15,12 @@ class Room {
     this.code = code;
     this.authCode = null;
     this.presenter = null;
-    this.clients = [];
+    this.clients = new Set();
     this.suggestions = [];
     //Voting options
     this.topic = null;
-    this.voteoptions = null;
-    this.votes = null;
+    this.voteoptions = [];
+    this.votes = [];
     //Remove after 5 hours
     this.established = Date.now();
   }
@@ -37,7 +37,7 @@ class Room {
     } else {
       //Add students to list
       
-      this.clients.push(ws);
+      this.clients.add(ws);
     }
     //If bad auth token ( Create new class.)
     if(auth !=null){
@@ -48,7 +48,7 @@ class Room {
   }
 
   removeClient(ws) {
-    this.clients = this.clients.filter((w)=> w ==ws);
+    this.clients.delete(ws);
     this.broadcastSuggestions();
   }
 
@@ -57,15 +57,13 @@ class Room {
     const suggestionsMessage = JSON.stringify(this.suggestions);
     this.presenter.send(suggestionsMessage)
     //Also send the count of users
-    //TODO sometimes the count is off?
-    console.log(Object.keys(this.clients).length)
-    this.presenter.send(JSON.stringify({type:"count",count:Object.keys(this.clients).length}));
-    this.presenter.send(JSON.stringify({type:"vote_count",vote_count:this.votes}));
+    this.presenter.send(JSON.stringify({type:"count",count:this.clients.size}));
+    this.presenter.send(JSON.stringify({type:"vote_count",votecount:this.votes}));
 
     //Send out vote information to all people
     this.clients.forEach(ws =>{
       ws.send(JSON.stringify({type:"topic",topic:this.topic}));
-      ws.send(JSON.stringify({type:"vote_options",vote_options:this.voteoptions}))
+      ws.send(JSON.stringify({type:"vote_options", voteoptions:this.voteoptions}))
     });
   }
 }
@@ -126,15 +124,16 @@ wss.on('connection', (ws) => {
       // Update vote options
       if(ws == rooms.get(ws.code).presenter) {
         rooms.get(ws.code).voteoptions = parsedMessage.vote_options;
-        rooms.get(ws.code).votes  = null;
-        rooms.get(ws.code).broadcastSuggestions();
+        rooms.get(ws.code).votes  = [];
       }
     } else if (parsedMessage.type === 'topic') {
       // Set topic to show on screens
       if(ws == rooms.get(ws.code).presenter) {
         rooms.get(ws.code).topic = parsedMessage.topic;
-        rooms.get(ws.code).broadcastSuggestions();
       }
+    } else if (parsedMessage.type === 'vote' &&parsedMessage.vote !=undefined) {
+      // Add vote from a client
+      rooms.get(ws.code).votes.push(parsedMessage.vote);
     }
 
     // Broadcast updated suggestions to the presenter

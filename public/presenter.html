@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Presenter</title>
   <link rel="stylesheet" href="index.css">
+  <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
 </head>
 <body>
-  <div class="options">
+  <div class="options" id="options">
     <div id="count" class="option">0</div>
     <div id="code-display" class="option">. . .</div>
-    <div id="settings" class="option">+</div>
+    <div id="settings" class="option">&#9881;</div>
+    <div id="trash" class="option">&#x1F5D1;</div>
     <div id="expand" class="option">&#x26F6;</div>
   </div>
   
@@ -24,22 +26,29 @@
     </div>
   </div>
 
-  <!-- Settings modal, input for question, buttons and inputs to add answers to vote on.-->
+  <div id="voting-modal" class="modal">
+    <div class="modal-content" id="voting-modal-content">
+      <p id="tq">Topic</p>
+      <div id="votelist">
+        <p>a</p>
+        <p>b</p>
+        <p>c</p>
+      </div>
+    </div>
+  </div>
 
-  <script src="shared.js"></script>
-  <script>
-    // Fullscreen toggle function
-    const expandButton = document.getElementById('expand');
-    
-    expandButton.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.log(`Error attempting to enable fullscreen mode: ${err.message}`);
-        });
-      } else {
-        document.exitFullscreen();
-      }
-    });
-  </script>
+  <!-- Settings modal, input for question title, buttons and inputs to add answers to vote on.-->
+  <div id="settings-modal" class="modal">
+    <div class="modal-content" id="settings-modal-content">
+      <p id="settings-modal-text">Settings</p>
+      <input type="text" id="topic-input" placeholder="Topic">
+      <div id="options-list"></div>
+      <button id="add-option-button">Add Option</button>
+      <button id="clear-option-button">Clean Slate</button>
+    </div>
+  </div>
+
+  <script src="scripts/shared.js"></script>
+  <script src="scripts/fullscreen.js"></script>
 </body>
 </html>
