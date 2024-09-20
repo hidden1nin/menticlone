@@ -168,7 +168,7 @@ wss.on('connection', (ws) => {
   });
 });
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8123;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

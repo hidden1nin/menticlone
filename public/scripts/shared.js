@@ -101,7 +101,9 @@ const addOption = (text) => {
 
 
 
-var ws = new WebSocket('ws://localhost:3000');
+var ws;
+if(window.location.hostname != "localhost") ws = new WebSocket('wss://'+window.location.hostname);
+if(window.location.hostname == "localhost") ws = new WebSocket('ws://localhost:8123');
 
 setInterval(()=>{
   if(ws.readyState==WebSocket.CLOSED) window.location.reload();
@@ -116,6 +118,24 @@ var positions = []; // Keep track of suggestion positions and their text
 var count = 0;
 var voted = false;
 var voteoptions = [];
+ws.onopen = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  code = urlParams.get('code');
+  //Hopefully  the websocket is connected!
+  //TODO make robust
+    if(isPresenter){
+      var auth = urlParams.get('auth');
+      const codeDisplay = document.getElementById('code-display');
+      codeDisplay.addEventListener('dblclick', () => {
+        openModal(code,true);
+      });
+      codeDisplay.textContent = code;
+      ws.send(JSON.stringify({ type: 'connect', code: code, auth: auth }));
+      ws.send(JSON.stringify({type:"focus",focus:null}));
+    }else{
+      ws.send(JSON.stringify({ type: 'connect', code: code, auth: null }));
+    }
+}
 ws.onmessage = (event) => {
   const suggestions = JSON.parse(event.data);
   if(suggestions.type == "exit") window.location.replace("index.html");
@@ -310,23 +330,3 @@ if(isPresenter){
   });
 }
 var code = "****"
-document.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  code = urlParams.get('code');
-  //Hopefully  the websocket is connected!
-  //TODO make robust
-  setTimeout(() => {
-    if(isPresenter){
-      var auth = urlParams.get('auth');
-      const codeDisplay = document.getElementById('code-display');
-      codeDisplay.addEventListener('dblclick', () => {
-        openModal(code,true);
-      });
-      codeDisplay.textContent = code;
-      ws.send(JSON.stringify({ type: 'connect', code: code, auth: auth }));
-      ws.send(JSON.stringify({type:"focus",focus:null}));
-    }else{
-      ws.send(JSON.stringify({ type: 'connect', code: code, auth: null }));
-    }
-  }, 500);
-});
