@@ -67,11 +67,12 @@ const openSettingsModal = () => {
 var options = new Set();
 
 // Function to add an option to the options list
-const addOption = () => {
+const addOption = (text) => {
   const newOption = document.createElement('input');
   newOption.type = 'text';
   newOption.placeholder = 'Enter an option';
   newOption.className = 'option-input';
+  newOption.value = text;
   options.add(newOption);
   newOption.addEventListener('input',(event)=>{
       // Check if the backspace key was pressed and the input value is now empty
@@ -153,6 +154,8 @@ ws.onmessage = (event) => {
   //Only presenter code
   if(!isPresenter)  return;
   if(suggestions.type == "count") {document.getElementById("count").innerText = suggestions.count; return;}
+  if(suggestions.type == "topic_rec") {document.getElementById("topic-input").value = suggestions.topic; return;}
+  if(suggestions.type == "question_rec") {console.log(suggestions.voteoptions);suggestions.voteoptions.forEach((question)=>addOption(question)); return;}
 
   if(suggestions.type == "vote_count") {
     votelist = document.getElementById('votelist');
@@ -253,7 +256,7 @@ if(isPresenter){
   document.getElementById('settings').addEventListener('click', openSettingsModal);
 
   // Add event listener to add an option when the add option button is clicked
-  document.getElementById("add-option-button").addEventListener('click', addOption);
+  document.getElementById("add-option-button").addEventListener('click', ()=>addOption(""));
 
   document.getElementById('clear-option-button').addEventListener('click', ()=>{
     options.clear();

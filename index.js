@@ -33,6 +33,8 @@ class Room {
       this.authCode = auth;
       this.presenter = ws;
       ws.send(JSON.stringify(this.suggestions));
+      ws.send(JSON.stringify({type:"topic_rec",topic:this.topic}));
+      ws.send(JSON.stringify({type:"question_rec",voteoptions:this.voteoptions}));
       return;
     } else {
       //Add students to list
