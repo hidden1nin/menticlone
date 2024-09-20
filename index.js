@@ -19,6 +19,7 @@ class Room {
     this.suggestions = [];
     //Voting options
     this.topic = null;
+    this.focus = null;
     this.voteoptions = [];
     this.votes = [];
     //Remove after 5 hours
@@ -35,6 +36,8 @@ class Room {
       ws.send(JSON.stringify(this.suggestions));
       ws.send(JSON.stringify({type:"topic_rec",topic:this.topic}));
       ws.send(JSON.stringify({type:"question_rec",voteoptions:this.voteoptions}));
+      ws.send(JSON.stringify({type:"count",count:this.clients.size}));
+      ws.send(JSON.stringify({type:"vote_count",votecount:this.votes}));
       return;
     } else {
       //Add students to list
@@ -58,12 +61,14 @@ class Room {
     if(this.presenter==undefined||this.presenter==null)return;
     const suggestionsMessage = JSON.stringify(this.suggestions);
     this.presenter.send(suggestionsMessage)
+    
     //Also send the count of users
     this.presenter.send(JSON.stringify({type:"count",count:this.clients.size}));
     this.presenter.send(JSON.stringify({type:"vote_count",votecount:this.votes}));
 
     //Send out vote information to all people
     this.clients.forEach(ws =>{
+      ws.send(JSON.stringify({type:"focus",focus:this.focus}));
       ws.send(JSON.stringify({type:"topic",topic:this.topic}));
       ws.send(JSON.stringify({type:"vote_options", voteoptions:this.voteoptions}))
     });
@@ -81,6 +86,12 @@ setInterval(() => {
     // Check if the room is older than 5 hours
     if (now - room.established > FIVE_HOURS) {
       rooms.delete(code);
+      room.clients.forEach((clientWs) => {
+        clientWs.send(JSON.stringify({type:"exit"}));
+        clientWs.close();
+      });
+      room.presenter.send(JSON.stringify({type:"exit"}));
+      room.presenter.close();
       console.log(`Room with code ${code} has been deleted due to age.`);
     }
   });
@@ -122,6 +133,9 @@ wss.on('connection', (ws) => {
     } else if (parsedMessage.type === 'delete') {
       // Handle deletion of a suggestion
       if(ws == rooms.get(ws.code).presenter) rooms.get(ws.code).suggestions.splice(parsedMessage.index, 1);
+    } else if (parsedMessage.type === 'focus') {
+      // Handle focusing on an element css.
+      if(ws == rooms.get(ws.code).presenter) rooms.get(ws.code).focus = parsedMessage.focus;
     } else if (parsedMessage.type === 'vote_options') {
       // Update vote options
       if(ws == rooms.get(ws.code).presenter) {

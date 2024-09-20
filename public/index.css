@@ -1,13 +1,13 @@
 body {
-    font-family: 'Comfortaa';
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
+  font-family: 'Comfortaa';
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
   .options {
     z-index: 10000;
     position: absolute;
@@ -203,6 +203,7 @@ body {
   margin-left: auto; /* 15% from the top and centered */
   margin-right: auto;
   margin-top: 10vh;
+  margin-bottom: auto;
   padding: 20px;
   width: 80%; /* Could be more or less, depending on screen size */
   max-width: 600px; /* Limit the max width */

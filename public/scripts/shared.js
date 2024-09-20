@@ -9,6 +9,7 @@ const votingModal = document.getElementById('voting-modal');
 
 // Function to open the modal
 const openModal = (text,big) => {
+  ws.send(JSON.stringify({type:"focus",focus:text}));
   modalText.style.fontSize = "36px";
   modalText.style.textAlign = "left";
   modalContent.style.backgroundColor="#007bff";
@@ -26,6 +27,7 @@ const openModal = (text,big) => {
 var triedToClose = false;
 // Function to close the modal
 const closeModalHandler = () => {
+  ws.send(JSON.stringify({type:"focus",focus:null}));
   modal.style.display = 'none';
   settingsModal.style.display = 'none';
 
@@ -47,7 +49,7 @@ const closeModalHandler = () => {
 
 };
 
-window.addEventListener('click', (event) => {
+if(isPresenter)window.addEventListener('click', (event) => {
   if (event.target === modal || event.target === votingModal || event.target === settingsModal) {
     closeModalHandler();
   }
@@ -117,6 +119,17 @@ var voteoptions = [];
 ws.onmessage = (event) => {
   const suggestions = JSON.parse(event.data);
   if(suggestions.type == "exit") window.location.replace("index.html");
+  if(suggestions.type == "focus") { 
+    if(suggestions.focus == null){
+      modal.style.display = 'none';
+      document.getElementById('form-container').style.display = "flex";
+    } else{
+      document.getElementById('form-container').style.display = "none";
+      modal.style.display = 'flex';
+      document.getElementById("modal-text").innerText = suggestions.focus; 
+    }
+    return;
+  }
   if(suggestions.type == "topic") {document.getElementById("topic").innerText = suggestions.topic; return;}
   if(suggestions.type == "vote_options") {
     //If no options reset to normal input
@@ -154,7 +167,11 @@ ws.onmessage = (event) => {
   //Only presenter code
   if(!isPresenter)  return;
   if(suggestions.type == "count") {document.getElementById("count").innerText = suggestions.count; return;}
-  if(suggestions.type == "topic_rec") {document.getElementById("topic-input").value = suggestions.topic; return;}
+  if(suggestions.type == "topic_rec") {
+    document.getElementById("tq").innerText = suggestions.topic;
+    document.getElementById("topic-input").value = suggestions.topic; 
+    return;
+  }
   if(suggestions.type == "question_rec") {console.log(suggestions.voteoptions);suggestions.voteoptions.forEach((question)=>addOption(question)); return;}
 
   if(suggestions.type == "vote_count") {
@@ -188,6 +205,10 @@ ws.onmessage = (event) => {
       // Set the text content of the p element to "vote: count"
       p.textContent = `${vote}`;
       c.textContent = `${voteCounts[vote]}`;
+      d.addEventListener('dblclick', () => {
+        closeModalHandler();
+        openModal(vote,true);
+      });
       votelist.appendChild(d);
     });
     return;
@@ -303,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       codeDisplay.textContent = code;
       ws.send(JSON.stringify({ type: 'connect', code: code, auth: auth }));
+      ws.send(JSON.stringify({type:"focus",focus:null}));
     }else{
       ws.send(JSON.stringify({ type: 'connect', code: code, auth: null }));
     }
