@@ -29,5 +29,11 @@ Visit [localhost:3000](http://localhost:3000) to access the application.
 ## Contributing
 We welcome contributions from developers who share our vision for improving classroom engagement and interaction. Please see the contributing guidelines for more information on how to get involved.
 
+## We currently need help with:
+* Simplifying index.css into multiple files.
+* Improving usability in menus.
+* Adding more features.
+* Ollama integration??
+
 ## License
 This project is licensed under the MIT License.
