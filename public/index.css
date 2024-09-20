@@ -101,7 +101,7 @@ body {
     /* border: 1px solid #ccc; */
     font-size: 18px;
     max-width: 300px; /* Ensure boxes don't get too wide */
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     opacity: 0; /* Start with opacity 0 */
@@ -195,6 +195,7 @@ body {
 }
 
 .modal-content {
+  overflow-wrap: anywhere;
   border-radius: 10px;
   font-size: 36px;
   color: white;
