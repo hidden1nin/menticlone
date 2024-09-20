@@ -104,56 +104,61 @@ wss.on('connection', (ws) => {
 
   // Handle messages from clients
   ws.on('message', (message) => {
-    const parsedMessage = JSON.parse(message);
-    
-    //Connect to room.
+    try {
+      const parsedMessage = JSON.parse(message);
+      
+      //Connect to room.
 
-    if (parsedMessage.type === 'connect') {
-      const { code, auth } = parsedMessage;
+      if (parsedMessage.type === 'connect') {
+        const { code, auth } = parsedMessage;
 
-      // Create or retrieve room
-      if (!rooms.has(code)) {
-        // Assuming you have a predefined auth code, replace 'YOUR_AUTH_CODE' with your logic
-        rooms.set(code, new Room(code));
+        // Create or retrieve room
+        if (!rooms.has(code)) {
+          // Assuming you have a predefined auth code, replace 'YOUR_AUTH_CODE' with your logic
+          rooms.set(code, new Room(code));
+        }
+        const room = rooms.get(code);
+        room.addClient(ws, auth);
+        return;
       }
-      const room = rooms.get(code);
-      room.addClient(ws, auth);
-      return;
+
+      //Block further code if not in room.
+
+      if(rooms.get(ws.code)==undefined) return;
+
+
+      if (typeof parsedMessage === 'string') {
+        // Handle new suggestions
+        var suggestions = rooms.get(ws.code).suggestions;
+        if(suggestions.indexOf(parsedMessage)==-1) suggestions.push(parsedMessage);
+      } else if (parsedMessage.type === 'delete') {
+        // Handle deletion of a suggestion
+        if(ws == rooms.get(ws.code).presenter) rooms.get(ws.code).suggestions.splice(parsedMessage.index, 1);
+      } else if (parsedMessage.type === 'focus') {
+        // Handle focusing on an element css.
+        if(ws == rooms.get(ws.code).presenter) rooms.get(ws.code).focus = parsedMessage.focus;
+      } else if (parsedMessage.type === 'vote_options') {
+        // Update vote options
+        if(ws == rooms.get(ws.code).presenter) {
+          rooms.get(ws.code).voteoptions = parsedMessage.vote_options;
+          rooms.get(ws.code).votes  = [];
+        }
+      } else if (parsedMessage.type === 'topic') {
+        // Set topic to show on screens
+        if(ws == rooms.get(ws.code).presenter) {
+          rooms.get(ws.code).topic = parsedMessage.topic;
+        }
+      } else if (parsedMessage.type === 'vote' &&parsedMessage.vote !=undefined) {
+        // Add vote from a client
+        rooms.get(ws.code).votes.push(parsedMessage.vote);
+      }
+
+      // Broadcast updated suggestions to the presenter
+      rooms.get(ws.code).broadcastSuggestions();
+    }  catch (error) {
+      //Probably invalid JSON, log the error and keep truckin :p
+      console.error(`Error: ${error}`);
     }
-
-    //Block further code if not in room.
-
-    if(rooms.get(ws.code)==undefined) return;
-
-
-    if (typeof parsedMessage === 'string') {
-      // Handle new suggestions
-      var suggestions = rooms.get(ws.code).suggestions;
-      if(suggestions.indexOf(parsedMessage)==-1) suggestions.push(parsedMessage);
-    } else if (parsedMessage.type === 'delete') {
-      // Handle deletion of a suggestion
-      if(ws == rooms.get(ws.code).presenter) rooms.get(ws.code).suggestions.splice(parsedMessage.index, 1);
-    } else if (parsedMessage.type === 'focus') {
-      // Handle focusing on an element css.
-      if(ws == rooms.get(ws.code).presenter) rooms.get(ws.code).focus = parsedMessage.focus;
-    } else if (parsedMessage.type === 'vote_options') {
-      // Update vote options
-      if(ws == rooms.get(ws.code).presenter) {
-        rooms.get(ws.code).voteoptions = parsedMessage.vote_options;
-        rooms.get(ws.code).votes  = [];
-      }
-    } else if (parsedMessage.type === 'topic') {
-      // Set topic to show on screens
-      if(ws == rooms.get(ws.code).presenter) {
-        rooms.get(ws.code).topic = parsedMessage.topic;
-      }
-    } else if (parsedMessage.type === 'vote' &&parsedMessage.vote !=undefined) {
-      // Add vote from a client
-      rooms.get(ws.code).votes.push(parsedMessage.vote);
-    }
-
-    // Broadcast updated suggestions to the presenter
-    rooms.get(ws.code).broadcastSuggestions();
   });
 
   ws.on('close', () => {
